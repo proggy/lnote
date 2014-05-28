@@ -1,0 +1,361 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: package lnote</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>lnote</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/djung/lib/lnote/__init__.py">/home/djung/lib/lnote/__init__.py</a></font></td></tr></table>
+    <p><tt>Write&nbsp;notes&nbsp;in&nbsp;LaTeX&nbsp;format,&nbsp;directly&nbsp;from&nbsp;the&nbsp;command&nbsp;line.&nbsp;Organize&nbsp;the<br>
+notes&nbsp;in&nbsp;notebooks.&nbsp;Automatically&nbsp;create&nbsp;a&nbsp;notebook&nbsp;for&nbsp;the&nbsp;current&nbsp;day&nbsp;if&nbsp;no<br>
+other&nbsp;notebook&nbsp;is&nbsp;selected.&nbsp;View&nbsp;and&nbsp;edit&nbsp;the&nbsp;notes&nbsp;of&nbsp;each&nbsp;day&nbsp;or&nbsp;notebook.<br>
+Select&nbsp;one&nbsp;or&nbsp;more&nbsp;notebooks&nbsp;or&nbsp;a&nbsp;certain&nbsp;timerange&nbsp;and&nbsp;export&nbsp;them&nbsp;to&nbsp;a&nbsp;PDF<br>
+file,&nbsp;or&nbsp;merge&nbsp;them&nbsp;into&nbsp;a&nbsp;new&nbsp;notebook.<br>
+&nbsp;<br>
+The&nbsp;default&nbsp;data&nbsp;directory&nbsp;is&nbsp;"~/data/lnote".&nbsp;It&nbsp;can&nbsp;be&nbsp;overwritten&nbsp;by&nbsp;setting<br>
+the&nbsp;environment&nbsp;variable&nbsp;LNOTE_DIR.<br>
+&nbsp;<br>
+To&nbsp;do:<br>
+--&gt;&nbsp;add&nbsp;-l/--line&nbsp;options&nbsp;to&nbsp;select&nbsp;a&nbsp;line&nbsp;or&nbsp;a&nbsp;range&nbsp;of&nbsp;lines<br>
+--&gt;&nbsp;add&nbsp;a&nbsp;search&nbsp;command&nbsp;(full&nbsp;text&nbsp;search&nbsp;feature),&nbsp;return&nbsp;notebook&nbsp;names<br>
+--&gt;&nbsp;add&nbsp;a&nbsp;command&nbsp;"clear"&nbsp;(or&nbsp;similar)&nbsp;to&nbsp;delete&nbsp;all&nbsp;temporary&nbsp;directories<br>
+--&gt;&nbsp;do&nbsp;not&nbsp;overwrite&nbsp;graphic&nbsp;files&nbsp;when&nbsp;submitting&nbsp;a&nbsp;figure,&nbsp;instead&nbsp;rename<br>
+&nbsp;<br>
+Ideas&nbsp;for&nbsp;the&nbsp;future:<br>
+--&gt;&nbsp;work&nbsp;with&nbsp;hardlinks&nbsp;instead&nbsp;of&nbsp;copying&nbsp;the&nbsp;graphics&nbsp;files?&nbsp;Not&nbsp;good&nbsp;if<br>
+&nbsp;&nbsp;&nbsp;&nbsp;renaming&nbsp;will&nbsp;be&nbsp;possible&nbsp;in&nbsp;the&nbsp;future.<br>
+&nbsp;<br>
+Written&nbsp;by&nbsp;Daniel&nbsp;Jung,&nbsp;Jacobs&nbsp;University&nbsp;Bremen&nbsp;(2012).</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Package Contents</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="exceptions.html#BaseException">exceptions.BaseException</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="lnote.html#DayFormatError">DayFormatError</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="lnote.html#DayRangeFormatError">DayRangeFormatError</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="lnote.html#SelectNotebookError">SelectNotebookError</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DayFormatError">class <strong>DayFormatError</strong></a>(<a href="exceptions.html#BaseException">exceptions.BaseException</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="lnote.html#DayFormatError">DayFormatError</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__created__</strong> = '2012-10-31'</dl>
+
+<dl><dt><strong>__modified__</strong> = '2012-10-31'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="DayFormatError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#DayFormatError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="DayFormatError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#DayFormatError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="DayFormatError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#DayFormatError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="DayFormatError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#DayFormatError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="DayFormatError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#DayFormatError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="DayFormatError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="DayFormatError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#DayFormatError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="DayFormatError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#DayFormatError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="DayFormatError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="DayFormatError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#DayFormatError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="DayFormatError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#DayFormatError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DayRangeFormatError">class <strong>DayRangeFormatError</strong></a>(<a href="lnote.html#DayFormatError">DayFormatError</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="lnote.html#DayRangeFormatError">DayRangeFormatError</a></dd>
+<dd><a href="lnote.html#DayFormatError">DayFormatError</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__created__</strong> = '2012-10-31'</dl>
+
+<dl><dt><strong>__modified__</strong> = '2012-10-31'</dl>
+
+<hr>
+Data descriptors inherited from <a href="lnote.html#DayFormatError">DayFormatError</a>:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="DayRangeFormatError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#DayRangeFormatError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="DayRangeFormatError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#DayRangeFormatError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="DayRangeFormatError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#DayRangeFormatError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="DayRangeFormatError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#DayRangeFormatError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="DayRangeFormatError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#DayRangeFormatError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="DayRangeFormatError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="DayRangeFormatError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#DayRangeFormatError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="DayRangeFormatError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#DayRangeFormatError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="DayRangeFormatError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="DayRangeFormatError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#DayRangeFormatError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="DayRangeFormatError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#DayRangeFormatError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SelectNotebookError">class <strong>SelectNotebookError</strong></a>(<a href="exceptions.html#BaseException">exceptions.BaseException</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="lnote.html#SelectNotebookError">SelectNotebookError</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__created__</strong> = '2012-10-31'</dl>
+
+<dl><dt><strong>__modified__</strong> = '2012-10-31'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="SelectNotebookError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#SelectNotebookError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="SelectNotebookError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#SelectNotebookError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="SelectNotebookError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#SelectNotebookError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="SelectNotebookError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#SelectNotebookError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="SelectNotebookError-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#SelectNotebookError-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="SelectNotebookError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="SelectNotebookError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#SelectNotebookError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="SelectNotebookError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#SelectNotebookError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="SelectNotebookError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="SelectNotebookError-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#SelectNotebookError-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="SelectNotebookError-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#SelectNotebookError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-append_text"><strong>append_text</strong></a>(notebook, text)</dt><dd><tt>Append&nbsp;text&nbsp;to&nbsp;the&nbsp;given&nbsp;notebook.</tt></dd></dl>
+ <dl><dt><a name="-call"><strong>call</strong></a>()</dt></dl>
+ <dl><dt><a name="-ceil"><strong>ceil</strong></a>(x)</dt><dd><tt>Return&nbsp;the&nbsp;ceiling&nbsp;of&nbsp;x.&nbsp;This&nbsp;exists&nbsp;as&nbsp;a&nbsp;substitute&nbsp;for&nbsp;numpy.ceil,&nbsp;to<br>
+avoid&nbsp;importing&nbsp;the&nbsp;huge&nbsp;numpy&nbsp;module&nbsp;just&nbsp;for&nbsp;this&nbsp;function.</tt></dd></dl>
+ <dl><dt><a name="-create"><strong>create</strong></a>(*args)</dt><dd><tt>Create&nbsp;a&nbsp;notebook.</tt></dd></dl>
+ <dl><dt><a name="-date2filename"><strong>date2filename</strong></a>(year, mon, mday)</dt><dd><tt>Convert&nbsp;Gregorian&nbsp;date&nbsp;to&nbsp;filename.</tt></dd></dl>
+ <dl><dt><a name="-delete"><strong>delete</strong></a>(*args)</dt><dd><tt>Delete&nbsp;a&nbsp;notebook.</tt></dd></dl>
+ <dl><dt><a name="-dirpath"><strong>dirpath</strong></a>(notebook)</dt><dd><tt>Return&nbsp;the&nbsp;path&nbsp;to&nbsp;the&nbsp;directory&nbsp;of&nbsp;the&nbsp;given&nbsp;notebook.</tt></dd></dl>
+ <dl><dt><a name="-edit"><strong>edit</strong></a>(*args)</dt><dd><tt>Open&nbsp;notebook&nbsp;in&nbsp;a&nbsp;text&nbsp;editor.&nbsp;If&nbsp;multiple&nbsp;notebooks&nbsp;are&nbsp;given,&nbsp;open<br>
+them&nbsp;side&nbsp;by&nbsp;side.</tt></dd></dl>
+ <dl><dt><a name="-equation"><strong>equation</strong></a>(*args)</dt><dd><tt>Add&nbsp;an&nbsp;equation&nbsp;to&nbsp;a&nbsp;notebook.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;selected&nbsp;notebook&nbsp;does&nbsp;not&nbsp;exist,&nbsp;it&nbsp;is&nbsp;created.&nbsp;By&nbsp;default,&nbsp;today's<br>
+notebook&nbsp;is&nbsp;used.</tt></dd></dl>
+ <dl><dt><a name="-export"><strong>export</strong></a>(*args)</dt><dd><tt>Export&nbsp;a&nbsp;notebook&nbsp;or&nbsp;selection&nbsp;of&nbsp;notebooks&nbsp;(for&nbsp;now&nbsp;only&nbsp;to&nbsp;PDF<br>
+format).</tt></dd></dl>
+ <dl><dt><a name="-figure"><strong>figure</strong></a>(*args)</dt><dd><tt>Add&nbsp;a&nbsp;figure&nbsp;to&nbsp;a&nbsp;notebook.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;selected&nbsp;notebook&nbsp;does&nbsp;not&nbsp;exist,&nbsp;it&nbsp;is&nbsp;created.&nbsp;By&nbsp;default,&nbsp;today's<br>
+notebook&nbsp;is&nbsp;used.<br>
+&nbsp;<br>
+To&nbsp;do:<br>
+--&gt;&nbsp;determine&nbsp;size&nbsp;of&nbsp;the&nbsp;graphics&nbsp;file&nbsp;and&nbsp;choose&nbsp;width&nbsp;and&nbsp;height<br>
+&nbsp;&nbsp;&nbsp;&nbsp;accordingly<br>
+--&gt;&nbsp;do&nbsp;not&nbsp;overwrite&nbsp;existing&nbsp;graphics&nbsp;files&nbsp;(maybe&nbsp;only&nbsp;by&nbsp;option),&nbsp;instead<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rename&nbsp;the&nbsp;file</tt></dd></dl>
+ <dl><dt><a name="-get_cols"><strong>get_cols</strong></a>()</dt><dd><tt>Try&nbsp;to&nbsp;get&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;shell&nbsp;window&nbsp;(will&nbsp;only&nbsp;work&nbsp;on&nbsp;Unix<br>
+systems).</tt></dd></dl>
+ <dl><dt><a name="-get_mtime"><strong>get_mtime</strong></a>(path)</dt><dd><tt>Return&nbsp;last&nbsp;modification&nbsp;time&nbsp;of&nbsp;a&nbsp;file&nbsp;or&nbsp;all&nbsp;files&nbsp;within&nbsp;a&nbsp;directory<br>
+tree&nbsp;(in&nbsp;seconds&nbsp;since&nbsp;the&nbsp;epoch).</tt></dd></dl>
+ <dl><dt><a name="-get_size"><strong>get_size</strong></a>(path)</dt><dd><tt>Return&nbsp;total&nbsp;size&nbsp;of&nbsp;a&nbsp;file&nbsp;or&nbsp;directory&nbsp;in&nbsp;bytes.<br>
+&nbsp;<br>
+Reference:<br>
+<a href="http://stackoverflow.com/questions/1392413/calculating-a-directory-size-using-python">http://stackoverflow.com/questions/1392413/calculating-a-directory-size-using-python</a></tt></dd></dl>
+ <dl><dt><a name="-greg2jdn"><strong>greg2jdn</strong></a>(year, mon, mday)</dt><dd><tt>Convert&nbsp;Gregorian&nbsp;date&nbsp;to&nbsp;Julian&nbsp;day&nbsp;number.<br>
+Reference:&nbsp;<a href="http://en.wikipedia.org/wiki/Julian_Date">http://en.wikipedia.org/wiki/Julian_Date</a></tt></dd></dl>
+ <dl><dt><a name="-item"><strong>item</strong></a>(*args)</dt><dd><tt>Add&nbsp;a&nbsp;list&nbsp;item&nbsp;to&nbsp;a&nbsp;notebook.&nbsp;If&nbsp;the&nbsp;notebook&nbsp;ends&nbsp;with&nbsp;a&nbsp;list&nbsp;of&nbsp;the<br>
+chosen&nbsp;type,&nbsp;continue&nbsp;that&nbsp;list.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;selected&nbsp;notebook&nbsp;does&nbsp;not&nbsp;exist,&nbsp;it&nbsp;is&nbsp;created.&nbsp;By&nbsp;default,&nbsp;today's<br>
+notebook&nbsp;is&nbsp;used.</tt></dd></dl>
+ <dl><dt><a name="-jdn2greg"><strong>jdn2greg</strong></a>(jdn)</dt><dd><tt>Convert&nbsp;Julian&nbsp;day&nbsp;number&nbsp;to&nbsp;Gregorian&nbsp;date.<br>
+Reference:&nbsp;<a href="http://en.wikipedia.org/wiki/Julian_Date">http://en.wikipedia.org/wiki/Julian_Date</a></tt></dd></dl>
+ <dl><dt><a name="-linebreak"><strong>linebreak</strong></a>(*args)</dt><dd><tt>Add&nbsp;a&nbsp;linebreak&nbsp;(an&nbsp;empty&nbsp;line)&nbsp;to&nbsp;a&nbsp;notebook.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;selected&nbsp;notebook&nbsp;does&nbsp;not&nbsp;exist,&nbsp;it&nbsp;is&nbsp;created.&nbsp;By&nbsp;default,&nbsp;today's<br>
+notebook&nbsp;is&nbsp;used.</tt></dd></dl>
+ <dl><dt><a name="-listn"><strong>listn</strong></a>(*args)</dt><dd><tt>List&nbsp;notebooks.</tt></dd></dl>
+ <dl><dt><a name="-marginnote"><strong>marginnote</strong></a>(*args)</dt><dd><tt>Add&nbsp;a&nbsp;marginal&nbsp;note&nbsp;to&nbsp;the&nbsp;notebook&nbsp;(using&nbsp;the&nbsp;LaTeX&nbsp;command<br>
+"marginpar").<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;selected&nbsp;notebook&nbsp;does&nbsp;not&nbsp;exist,&nbsp;it&nbsp;is&nbsp;created.&nbsp;By&nbsp;default,&nbsp;today's<br>
+notebook&nbsp;is&nbsp;used.</tt></dd></dl>
+ <dl><dt><a name="-merge"><strong>merge</strong></a>(*args)</dt><dd><tt>Merge&nbsp;several&nbsp;notebooks&nbsp;into&nbsp;another&nbsp;(append&nbsp;all&nbsp;source&nbsp;notebooks&nbsp;to&nbsp;the<br>
+target&nbsp;notebook).&nbsp;If&nbsp;the&nbsp;target&nbsp;notebook&nbsp;does&nbsp;not&nbsp;exist,&nbsp;create&nbsp;it.</tt></dd></dl>
+ <dl><dt><a name="-opt2day"><strong>opt2day</strong></a>(opt)</dt><dd><tt>Convert&nbsp;option&nbsp;string&nbsp;to&nbsp;a&nbsp;certain&nbsp;date.&nbsp;Return&nbsp;as&nbsp;Julian&nbsp;day&nbsp;number<br>
+(integer).</tt></dd></dl>
+ <dl><dt><a name="-opt2dayrange"><strong>opt2dayrange</strong></a>(opt)</dt><dd><tt>Convert&nbsp;option&nbsp;string&nbsp;to&nbsp;a&nbsp;timerange.&nbsp;Return&nbsp;as&nbsp;tuple&nbsp;with&nbsp;two&nbsp;integers<br>
+(JDN1,&nbsp;JDN2+1)&nbsp;(Julian&nbsp;day&nbsp;numbers).</tt></dd></dl>
+ <dl><dt><a name="-opt2dayranges"><strong>opt2dayranges</strong></a>(opt)</dt><dd><tt>Convert&nbsp;option&nbsp;string&nbsp;to&nbsp;a&nbsp;list&nbsp;of&nbsp;timeranges.&nbsp;Return&nbsp;as&nbsp;list&nbsp;of&nbsp;tuples<br>
+with&nbsp;two&nbsp;integers&nbsp;(JDN1,&nbsp;JDN2+1)&nbsp;(Julian&nbsp;day&nbsp;numbers).</tt></dd></dl>
+ <dl><dt><a name="-opt2days"><strong>opt2days</strong></a>(opt)</dt><dd><tt>Convert&nbsp;option&nbsp;string&nbsp;to&nbsp;a&nbsp;list&nbsp;of&nbsp;dates.&nbsp;Return&nbsp;list&nbsp;of&nbsp;integers<br>
+(Julian&nbsp;day&nbsp;numbers).</tt></dd></dl>
+ <dl><dt><a name="-paragraph"><strong>paragraph</strong></a>(*args)</dt><dd><tt>Add&nbsp;a&nbsp;titled&nbsp;paragraph&nbsp;to&nbsp;a&nbsp;notebook.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;selected&nbsp;notebook&nbsp;does&nbsp;not&nbsp;exist,&nbsp;it&nbsp;is&nbsp;created.&nbsp;By&nbsp;default,&nbsp;today's<br>
+notebook&nbsp;is&nbsp;used.</tt></dd></dl>
+ <dl><dt><a name="-path"><strong>path</strong></a>(*args)</dt><dd><tt>Get&nbsp;path&nbsp;of&nbsp;the&nbsp;directory&nbsp;of&nbsp;a&nbsp;certain&nbsp;notebook.</tt></dd></dl>
+ <dl><dt><a name="-plural"><strong>plural</strong></a>(number)</dt><dd><tt>If&nbsp;abs(number)&nbsp;==&nbsp;1,&nbsp;return&nbsp;"",&nbsp;otherwise&nbsp;return&nbsp;"s".&nbsp;For&nbsp;conveniently<br>
+appending&nbsp;the&nbsp;plural&nbsp;"s"&nbsp;to&nbsp;words&nbsp;depending&nbsp;on&nbsp;some&nbsp;number.</tt></dd></dl>
+ <dl><dt><a name="-printcols"><strong>printcols</strong></a>(strlist, ret<font color="#909090">=False</font>)</dt><dd><tt>Print&nbsp;the&nbsp;strings&nbsp;in&nbsp;the&nbsp;given&nbsp;list&nbsp;in&nbsp;column&nbsp;by&nbsp;column&nbsp;(similar&nbsp;the&nbsp;bash<br>
+command&nbsp;"ls"),&nbsp;respecting&nbsp;the&nbsp;width&nbsp;of&nbsp;the&nbsp;shell&nbsp;window.&nbsp;If&nbsp;ret&nbsp;is&nbsp;True,&nbsp;give<br>
+back&nbsp;the&nbsp;resulting&nbsp;string&nbsp;instead&nbsp;of&nbsp;printing&nbsp;it&nbsp;to&nbsp;stdout.</tt></dd></dl>
+ <dl><dt><a name="-prune"><strong>prune</strong></a>(*args)</dt><dd><tt>Remove&nbsp;the&nbsp;last&nbsp;line&nbsp;of&nbsp;a&nbsp;notebook.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;selected&nbsp;notebook&nbsp;does&nbsp;not&nbsp;exist,&nbsp;it&nbsp;is&nbsp;created.&nbsp;By&nbsp;default,&nbsp;today's<br>
+notebook&nbsp;is&nbsp;used.<br>
+&nbsp;<br>
+To&nbsp;do:<br>
+--&gt;&nbsp;negative&nbsp;numbers&nbsp;remove&nbsp;lines&nbsp;from&nbsp;the&nbsp;beginning&nbsp;of&nbsp;the&nbsp;notebook</tt></dd></dl>
+ <dl><dt><a name="-rename"><strong>rename</strong></a>(*args)</dt><dd><tt>Rename&nbsp;a&nbsp;notebook.</tt></dd></dl>
+ <dl><dt><a name="-section"><strong>section</strong></a>(*args)</dt><dd><tt>Add&nbsp;a&nbsp;section&nbsp;to&nbsp;a&nbsp;notebook.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;selected&nbsp;notebook&nbsp;does&nbsp;not&nbsp;exist,&nbsp;it&nbsp;is&nbsp;created.&nbsp;By&nbsp;default,&nbsp;today's<br>
+notebook&nbsp;is&nbsp;used.</tt></dd></dl>
+ <dl><dt><a name="-select_notebook"><strong>select_notebook</strong></a>(pattern, forgiving<font color="#909090">=False</font>)</dt><dd><tt>Select&nbsp;a&nbsp;single&nbsp;notebook&nbsp;based&nbsp;on&nbsp;the&nbsp;given&nbsp;pattern.&nbsp;If&nbsp;forgiving&nbsp;is<br>
+True,&nbsp;create&nbsp;a&nbsp;new&nbsp;notebook&nbsp;if&nbsp;the&nbsp;given&nbsp;one&nbsp;doesn't&nbsp;exist.&nbsp;Otherwise,&nbsp;only<br>
+create&nbsp;a&nbsp;new&nbsp;notebook&nbsp;if&nbsp;pattern&nbsp;is&nbsp;None&nbsp;or&nbsp;empty.</tt></dd></dl>
+ <dl><dt><a name="-select_notebooks"><strong>select_notebooks</strong></a>(*patterns, **kwargs)</dt><dd><tt>Select&nbsp;notebooks&nbsp;based&nbsp;on&nbsp;the&nbsp;given&nbsp;string&nbsp;patterns.&nbsp;If&nbsp;unique&nbsp;is&nbsp;True,<br>
+each&nbsp;notebook&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;list&nbsp;only&nbsp;once.&nbsp;If&nbsp;skipmissing&nbsp;is&nbsp;True,<br>
+no&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;there&nbsp;is&nbsp;nothing&nbsp;found&nbsp;for&nbsp;a&nbsp;pattern.</tt></dd></dl>
+ <dl><dt><a name="-texpath"><strong>texpath</strong></a>(notebook)</dt><dd><tt>Return&nbsp;the&nbsp;path&nbsp;to&nbsp;the&nbsp;tex-file&nbsp;of&nbsp;the&nbsp;given&nbsp;notebook.</tt></dd></dl>
+ <dl><dt><a name="-text"><strong>text</strong></a>(*args)</dt><dd><tt>Add&nbsp;text&nbsp;to&nbsp;a&nbsp;notebook.&nbsp;This&nbsp;can&nbsp;be&nbsp;any&nbsp;LaTeX-compatible&nbsp;code.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;selected&nbsp;notebook&nbsp;does&nbsp;not&nbsp;exist,&nbsp;it&nbsp;is&nbsp;created.&nbsp;By&nbsp;default,&nbsp;today's<br>
+notebook&nbsp;is&nbsp;used.</tt></dd></dl>
+ <dl><dt><a name="-view"><strong>view</strong></a>(*args)</dt><dd><tt>View&nbsp;a&nbsp;notebook&nbsp;or&nbsp;a&nbsp;selection&nbsp;of&nbsp;notebooks.<br>
+&nbsp;<br>
+To&nbsp;do:<br>
+--&gt;&nbsp;add&nbsp;-l/--line&nbsp;option&nbsp;to&nbsp;select&nbsp;a&nbsp;line&nbsp;or&nbsp;a&nbsp;range&nbsp;of&nbsp;lines</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>LNOTE_DIR</strong> = '/home/djung/data/lnote'<br>
+<strong>__created__</strong> = '2012-10-29'<br>
+<strong>__modified__</strong> = '2013-11-29'</td></tr></table>
+</body></html>
