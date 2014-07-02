@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # lnote documentation build configuration file, created by
-# sphinx-quickstart on Wed Jul  2 23:24:12 2014.
+# sphinx-quickstart on Wed Jul  2 23:46:22 2014.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
