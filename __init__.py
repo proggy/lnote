@@ -27,21 +27,26 @@ other notebook is selected. View and edit the notes of each day or notebook.
 Select one or more notebooks or a certain timerange and export them to a PDF
 file, or merge them into a new notebook.
 
+For lnote to work, you need to create an executable script with the name
+"lnote", which is calling the function *call()*, like this:
+
+    >>> import sys, lnote
+    >>> if __name__ == '__main__':
+    >>>     sys.exit(lnote.call())
+
 The default data directory is "~/data/lnote". It can be overwritten by setting
-the environment variable LNOTE_DIR.
-
-To do:
---> add -l/--line options to select a line or a range of lines
---> add a search command (full text search feature), return notebook names
---> add a command "clear" (or similar) to delete all temporary directories
---> do not overwrite graphic files when submitting a figure, instead rename
-
-Ideas for the future:
---> work with hardlinks instead of copying the graphics files? Not good if
-    renaming will be possible in the future.
-
-Written by Daniel Jung, Jacobs University Bremen (2012).
-"""
+the environment variable LNOTE_DIR."""
+#
+# To do:
+# --> add -l/--line options to select a line or a range of lines
+# --> add a search command (full text search feature), return notebook names
+# --> add a command "clear" (or similar) to delete all temporary directories
+# --> do not overwrite graphic files when submitting a figure, instead rename
+#
+# Ideas for the future:
+# --> work with hardlinks instead of copying the graphics files? Not good if
+#     renaming will be possible in the future.
+#
 __created__ = '2012-10-29'
 __modified__ = '2013-11-29'
 import commands
@@ -1430,6 +1435,12 @@ _cmd2func = {
 
 
 def call():
+    """This function should be called by an executable file with the following
+    content:
+
+    >>> import sys, lnote
+    >>> if __name__ == '__main__':
+    >>>     sys.exit(lnote.call())"""
     # 2012-10-29 - 2012-11-15
 
     # return words for custom tab completion
