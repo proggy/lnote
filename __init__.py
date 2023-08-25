@@ -4,8 +4,8 @@
 # Copyright notice
 # ----------------
 #
-# Copyright (C) 2013-2014 Daniel Jung
-# Contact: djungbremen@gmail.com
+# Copyright (C) 2013-2023 Daniel Jung
+# Contact: proggy-contact@mailbox.org
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -21,30 +21,17 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
 #
-"""Write notes in LaTeX format, directly from the command line. Organize the
-notes in notebooks. Automatically create a notebook for the current day if no
-other notebook is selected. View and edit the notes of each day or notebook.
-Select one or more notebooks or a certain timerange and export them to a PDF
-file, or merge them into a new notebook.
+"""Compose notes in LaTeX format on the command line. Organize the notes in
+notebooks. Automatically create a notebook for the current day if no specific
+notebook is selected. View and edit the notes of each day or notebook. Select
+one or more notebooks or a certain timerange and export them to a PDF file, or
+merge them into a new notebook.
 
-The default data directory is "~/data/lnote". It can be overwritten by setting
+The default data directory is "~/data/lnote". This can be configured by setting
 the environment variable LNOTE_DIR.
-
-To do:
---> add -l/--line options to select a line or a range of lines
---> add a search command (full text search feature), return notebook names
---> add a command "clear" (or similar) to delete all temporary directories
---> do not overwrite graphic files when submitting a figure, instead rename
-
-Ideas for the future:
---> work with hardlinks instead of copying the graphics files? Not good if
-    renaming will be possible in the future.
-
-Written by Daniel Jung, Jacobs University Bremen (2012).
 """
-__created__ = '2012-10-29'
-__modified__ = '2013-11-29'
-import commands
+__version__ = 'v0.1.0'
+
 import glob
 import fnmatch
 import os
@@ -52,11 +39,7 @@ import shutil
 import subprocess
 import sys
 import time
-
-try:
-    import optparse2 as optparse
-except ImportError:
-    import optparse
+import optparse
 
 
 # set default data directory, create it if it does not exist
@@ -72,10 +55,9 @@ if not os.path.isdir(LNOTE_DIR):
 
 def create(*args):
     """Create a notebook."""
-    # 2012-10-30 - 2012-10-30
     op = optparse.OptionParser(usage='%prog create [options] NAME ' +
                                      '[NAME2 NAME3 ...]',
-                               version=__modified__,
+                               version=__version__,
                                description=create.__doc__)
     op.add_option('-t', '--template', default='', type=str,
                   help='create new notebook from template ' +
@@ -87,52 +69,49 @@ def create(*args):
     opts, posargs = op.parse_args(args=list(args))
 
     # check if template exists
-    if opts.template \
-            and not os.path.isdir(os.path.join(LNOTE_DIR, opts.template)):
-        print >>sys.stderr, 'lnote create: template "%s" ' % opts.template + \
-                            'not found'
+    if opts.template and not os.path.isdir(os.path.join(LNOTE_DIR, opts.template)):
+        print(f'lnote create: template "{opts.template}" not found', file=sys.stderr)
         sys.exit(1)
 
     for name in posargs:
         # check if notebook with that name already exists
         if name in os.listdir(LNOTE_DIR):
-            print >>sys.stderr, 'lnote create: cannot create notebook ' + \
-                                '"%s": file exists' % name
+            print('lnote create: cannot create notebook ' +
+                  f'"{name}": file exists', file=sys.stderr)
             continue
 
         # create notebook
         os.mkdir(os.path.join(LNOTE_DIR, name))
         if opts.verbose:
-            print 'mkdir %s' % os.path.join(LNOTE_DIR, name)
-        dst = os.path.join(LNOTE_DIR, name, name+'.tex')
+            print(f'mkdir {os.path.join(LNOTE_DIR, name)}')
+        dst = os.path.join(LNOTE_DIR, name, name + '.tex')
         if opts.template:
             # copy the template file
-            src = os.path.join(LNOTE_DIR, opts.template, opts.template+'.tex')
+            src = os.path.join(LNOTE_DIR, opts.template, opts.template + '.tex')
             shutil.copyfile(src, dst)
             if opts.verbose:
-                print 'cp %s %s' % (src, dst)
+                print(f'cp {src} {dst}')
         else:
             open(dst, 'w').close()
             if opts.verbose:
-                print 'echo -n > %s' % dst
+                print(f'echo -n > {dst}')
 
         # copy all other files from the template as well
         if opts.template:
             for filename in os.listdir(os.path.join(LNOTE_DIR, opts.template)):
-                if filename != opts.template+'.tex':
+                if filename != opts.template + '.tex':
                     src = os.path.join(LNOTE_DIR, opts.template, filename)
                     dst = os.path.join(LNOTE_DIR, name)
                     shutil.copy(src, dst)
                     if opts.verbose:
-                        print 'cp %s %s' % (src, dst)
+                        print(f'cp {src} {dst}')
 
 
 def listn(*args):
     """List notebooks."""
-    # 2012-10-30 - 2013-11-08
     op = optparse.OptionParser(usage='%prog list [options] ' +
                                      '[PATTERN [PATTERN2 PATTERN3 ...]]',
-                               version=__modified__,
+                               version=__version__,
                                description=listn.__doc__)
     op.add_option('-l', '--long', default=False, action='store_true',
                   help='use a long listing format. The columns, from left ' +
@@ -148,8 +127,7 @@ def listn(*args):
     try:
         notebooks = select_notebooks(*posargs, unique=True, forgiving=True)
     except SelectNotebookError as e:
-        print >>sys.stderr, \
-            'lnote list: notebook not found: %s' % e
+        print(f'lnote list: notebook not found: {e}', file=sys.stderr)
         sys.exit(1)
     notebooks.sort()
 
@@ -163,19 +141,18 @@ def listn(*args):
             filecount = len(os.listdir(dirpath(notebook)))
             with open(texpath(notebook), 'r') as f:
                 linecount = len(f.readlines())
-            print '% 3i % 4i % *i %s %s' \
+            print('% 3i % 4i % *i %s %s' \
                   % (filecount, linecount, dirsize_digits, dirsize,
-                     time.ctime(modtime), notebook)
+                     time.ctime(modtime), notebook))
     else:
         printcols(notebooks)
 
 
 def rename(*args):
     """Rename a notebook."""
-    # 2012-10-30 - 2012-10-30
     op = optparse.OptionParser(usage='%prog rename [options] OLD_NAME ' +
                                      'NEW_NAME',
-                               version=__modified__,
+                               version=__version__,
                                description=rename.__doc__)
     op.add_option('-v', '--verbose', default=False, action='store_true',
                   help='be verbose')
@@ -183,20 +160,18 @@ def rename(*args):
         args = ['--help']
     opts, posargs = op.parse_args(args=list(args))
     if len(posargs) != 2:
-        print >>sys.stderr, 'lnote rename: wrong number of parameters, ' + \
-                            'expecting exactly two (old and new notebook name)'
+        print('lnote rename: wrong number of parameters, ' +
+              'expecting exactly two (old and new notebook name)', file=sys.stderr)
     old, new = posargs
 
     # check if notebook exists
     if old not in os.listdir(LNOTE_DIR):
-        print >>sys.stderr, 'lnote rename: cannot rename "%s": ' % old + \
-                            'no such file'
+        print(f'lnote rename: cannot rename "{old}": no such file', file=sys.stderr)
         sys.exit(1)
 
     # check if notebook with that name already exists
     if new in os.listdir(LNOTE_DIR):
-        print >>sys.stderr, 'lnote rename: cannot rename notebook to ' + \
-                            '"%s": file exists' % new
+        print(f'lnote rename: cannot rename notebook to "{new}": file exists', file=sys.stderr)
         sys.exit(1)
 
     # rename notebook
@@ -204,21 +179,20 @@ def rename(*args):
     newdir = os.path.join(LNOTE_DIR, new)
     os.rename(olddir, newdir)
     if opts.verbose:
-        print 'mv %s %s' % (olddir, newdir)
-    oldtex = os.path.join(LNOTE_DIR, new, old+'.tex')
-    newtex = os.path.join(LNOTE_DIR, new, new+'.tex')
+        print(f'mv {olddir} {newdir}')
+    oldtex = os.path.join(LNOTE_DIR, new, old + '.tex')
+    newtex = os.path.join(LNOTE_DIR, new, new + '.tex')
     os.rename(oldtex, newtex)
     if opts.verbose:
-        print 'mv %s %s' % (oldtex, newtex)
+        print(f'mv {oldtex} {newtex}')
 
 
 def merge(*args):
     """Merge several notebooks into another (append all source notebooks to the
     target notebook). If the target notebook does not exist, create it."""
-    # 2012-10-31 - 2012-11-23
     op = optparse.OptionParser(usage='%prog merge [options] ' +
                                      'SOURCE_NOTEBOOKS TARGET_NOTEBOOK',
-                               version=__modified__,
+                               version=__version__,
                                description=merge.__doc__)
     op.add_option('-v', '--verbose', default=False, action='store_true',
                   help='be verbose')
@@ -233,8 +207,7 @@ def merge(*args):
     # check if all notebooks exist
     for notebook in notebooks:
         if notebook not in os.listdir(LNOTE_DIR):
-            print >>sys.stderr, 'lnote merge: cannot load notebook ' + \
-                                '"%s": no such file' % notebook
+            print('lnote merge: cannot load notebook "{notebook}": no such file', file=sys.stderr)
             sys.exit(1)
 
     # merge notebooks
@@ -247,25 +220,24 @@ def merge(*args):
             marginnote('--notebook', new, '\\texttt{%s}' % notebook)
         append_text(new, ''.join(lines).strip())
         if opts.verbose:
-            print 'cat %s >> %s' % (texpath(notebook), texpath(new))
+            print(f'cat {texpath(notebook)} >> {texpath(new)}')
 
         # copy all other files from the source notebook
         for filename in os.listdir(os.path.join(LNOTE_DIR, notebook)):
-            if filename != notebook+'.tex':
+            if filename != notebook + '.tex':
                 src = os.path.join(LNOTE_DIR, notebook, filename)
                 dst = os.path.join(LNOTE_DIR, new)
                 shutil.copy(src, dst)
                 if opts.verbose:
-                    print 'cp %s %s' % (src, dst)
+                    print('cp {src} {dst}')
 
 
 def edit(*args):
     """Open notebook in a text editor. If multiple notebooks are given, open
     them side by side."""
-    # 2012-10-31 - 2012-11-01
     op = optparse.OptionParser(usage='%prog edit [options] NOTEBOOK ' +
                                      '[NOTEBOOK2 NOTEBOOK3 ...]',
-                               version=__modified__,
+                               version=__version__,
                                description=edit.__doc__)
     op.add_option('-e', '--editor',
                   default=os.environ.get('LNOTE_EDITOR', 'vim'),
@@ -287,10 +259,9 @@ def edit(*args):
 
 def delete(*args):
     """Delete a notebook."""
-    # 2012-10-31 - 2012-10-31
     op = optparse.OptionParser(usage='%prog delete [options] NOTEBOOK ' +
                                      '[NOTEBOOK2 NOTEBOOK3 ...]',
-                               version=__modified__,
+                               version=__version__,
                                description=delete.__doc__)
     op.add_option('-n', '--notebook', default=None, help='select notebook')
     op.add_option('-f', '--force', default=False, action='store_true',
@@ -306,22 +277,21 @@ def delete(*args):
         notebooks = select_notebooks(*posargs, unique=True,
                                      forgiving=opts.force)
     except SelectNotebookError as e:
-        print >>sys.stderr, \
-            'lnote delete: notebook not found: %s' % e
+        print(f'lnote delete: notebook not found: {e}', file=sys.stderr)
         sys.exit(1)
 
     # delete notebooks
     for notebook in notebooks:
         # prompt
         if not opts.test and not opts.force:
-            message = 'delete notebook "%s"? ' % notebook
-            answer = raw_input(message).lower()
+            message = f'delete notebook "{notebook}"? '
+            answer = input(message).lower()
             if not answer or not 'yes'.startswith(answer):
                 continue
 
         # delete
         if opts.test:
-            print 'would have deleted "%s"' % notebook
+            print(f'would have deleted "{notebook}"')
         else:
             shutil.rmtree(os.path.join(LNOTE_DIR, notebook))
 
@@ -329,12 +299,11 @@ def delete(*args):
 def export(*args):
     """Export a notebook or selection of notebooks (for now only to PDF
     format)."""
-    # 2012-10-31 - 2012-11-23
 
     op = optparse.OptionParser(usage='%prog export [options] ' +
                                      '[PATTERN [PATTERN2 PATTERN3 ...]] ' +
                                      'OUTPUT_FILE',
-                               version=__modified__,
+                               version=__version__,
                                description=export.__doc__)
     op.add_option('-m', '--export-merge', dest='mergetemp',
                   default='temp-export-merge',
@@ -357,7 +326,7 @@ def export(*args):
     # select notebooks
     notebooks = select_notebooks(*posargs[:-1])
     if len(notebooks) == 0:
-        print >>sys.stderr, 'lnote export: no notebook selected'
+        print('lnote export: no notebook selected', file=sys.stderr)
         sys.exit(1)
 
     # select target
@@ -378,16 +347,16 @@ def export(*args):
     if not os.path.exists(opts.compiletemp):
         os.makedirs(opts.compiletemp)
     for filename in os.listdir(dirpath(opts.mergetemp)):
-        if filename != opts.mergetemp+'.tex':
+        if filename != opts.mergetemp + '.tex':
             src = os.path.join(dirpath(opts.mergetemp), filename)
             shutil.copy(src, opts.compiletemp)
 
     # add LaTeX preample and epilog to the tex-file and copy it over
-    preamble = '\documentclass{scrartcl}\n' + \
-               '\usepackage{amsmath}\n\usepackage{amsthm}\n' + \
-               '\usepackage{graphicx}\n\usepackage{commath}\n' + \
-               '\\begin{document}\n\n'
-    epilog = '\\end{document}'
+    preamble = r'\\documentclass{scrartcl}\\n' + \
+               r'\\usepackage{amsmath}\n\\usepackage{amsthm}\n' + \
+               r'\\usepackage{graphicx}\n\\usepackage{commath}\n' + \
+               r'\\begin{document}\\n\\n'
+    epilog = r'\\end{document}'
     with open(texpath(opts.mergetemp), 'r') as f:
         lines = f.readlines()
     with open(os.path.join(opts.compiletemp, opts.mergetemp+'.tex'), 'w') as f:
@@ -397,27 +366,24 @@ def export(*args):
 
     # use pdflatex to compile PDF document
     cdcmd = 'cd %s' % opts.compiletemp
-    latexcmd = 'pdflatex %s' % opts.mergetemp+'.tex'
+    latexcmd = 'pdflatex %s' % opts.mergetemp + '.tex'
     #os.system('%s;%s' % (cdcmd, latexcmd))
-    subprocess.call('%s;%s' % (cdcmd, latexcmd), shell=True,
+    subprocess.call(f'{cdcmd};{latexcmd}', shell=True,
                     stderr=None if opts.verbose else subprocess.STDOUT,
                     stdout=None if opts.verbose else open('/dev/null', 'w'))
     try:
-        shutil.copyfile(os.path.join(opts.compiletemp, opts.mergetemp+'.pdf'),
-                        target)
+        shutil.copyfile(os.path.join(opts.compiletemp, opts.mergetemp+'.pdf'), target)
     except IOError:
-        print >>sys.stderr, \
-            'lnote export: export failed' + \
-            ('' if opts.verbose else ', use --verbose to get details')
+        print('lnote export: export failed' +
+            ('' if opts.verbose else ', use --verbose to get details'), file=sys.stderr)
 
 
 def path(*args):
     """Get path of the directory of a certain notebook.
     """
-    # 2013-11-08 - 2013-11-08
     op = optparse.OptionParser(usage='%prog path [options] NOTEBOOK ' +
                                      '[NOTEBOOK2 NOTEBOOK3 ...]',
-                               version=__modified__, description=view.__doc__)
+                               version=__version__, description=view.__doc__)
     op.add_option('-t', '--tex', default=False, action='store_true',
                   help='get path of the tex file instead of the directory')
     opts, posargs = op.parse_args(args=list(args))
@@ -427,26 +393,22 @@ def path(*args):
     # select notebooks
     notebooks = select_notebooks(*posargs)
     if len(notebooks) == 0:
-        print >>sys.stderr, 'lnote path: no notebook selected'
+        print('lnote path: no notebook selected', file=sys.stderr)
         sys.exit(1)
 
     if opts.tex:
         for notebook in notebooks:
-            print texpath(notebook)
+            print(texpath(notebook))
     else:
         for notebook in notebooks:
-            print dirpath(notebook)
+            print(dirpath(notebook))
 
 
 def view(*args):
-    """View a notebook or a selection of notebooks.
-
-    To do:
-    --> add -l/--line option to select a line or a range of lines"""
-    # 2012-11-01 - 2012-11-23
+    """View a notebook or a selection of notebooks."""
     op = optparse.OptionParser(usage='%prog view [options] NOTEBOOK ' +
                                      '[NOTEBOOK2 NOTEBOOK3 ...]',
-                               version=__modified__, description=view.__doc__)
+                               version=__version__, description=view.__doc__)
     op.add_option('-e', '--export', default=False, action='store_true',
                   help='view exported version (for now only PDF)')
     op.add_option('-p', '--pdfviewer',
@@ -473,7 +435,7 @@ def view(*args):
     # select notebooks
     notebooks = select_notebooks(*posargs)
     if len(notebooks) == 0:
-        print >>sys.stderr, 'lnote view: no notebook selected'
+        print('lnote view: no notebook selected', file=sys.stderr)
         sys.exit(1)
 
     if opts.export:
@@ -493,14 +455,12 @@ def view(*args):
         for line in lines:
             if opts.pdfviewer in line and pdffile in line:
                 if opts.verbose:
-                    print 'lnote view: document still open in PID %s' \
-                        % line.split()[1]
+                    print(f'lnote view: document still open in PID {line.split()[1]}')
                 break
         else:
-            subprocess.call('%s %s &' % (opts.pdfviewer, pdffile), shell=True,
+            subprocess.call(f'{opts.pdfviewer} {pdffile} &', shell=True,
                             stderr=None if opts.verbose else subprocess.STDOUT,
-                            stdout=None if opts.verbose else
-                            open('/dev/null', 'w'))
+                            stdout=None if opts.verbose else open('/dev/null', 'w'))
     else:
         # merge notebooks into temporary notebook and display the tex-file
         delete(opts.mergetemp, '--force')
@@ -514,7 +474,7 @@ def view(*args):
                 text = text[1:]
             if text[-1] == '\n':
                 text = text[:-1]
-            print text
+            print(text)
 
 
 def text(*args):
@@ -522,11 +482,8 @@ def text(*args):
 
   If the selected notebook does not exist, it is created. By default, today's
   notebook is used."""
-  __created__ = '2012-10-29'
-  __modified__ = '2012-10-31'
-
   op = optparse.OptionParser(usage='%prog text [options] TEXT...',
-                             version=__modified__, description=text.__doc__)
+                             version=__version__, description=text.__doc__)
   op.add_option('-n', '--notebook', default=None, help='select notebook')
   op.add_option('-f', '--file', default=None,
                 help='read text from the given text file')
@@ -541,8 +498,7 @@ def text(*args):
   try:
     notebook = select_notebook(opts.notebook)
   except SelectNotebookError:
-    print >>sys.stderr, \
-          'lnote text: notebook not found: %s' % opts.notebook
+    print(f'lnote text: notebook not found: {opts.notebook}', file=sys.stderr)
     sys.exit(1)
 
   # append text from command line arguments
@@ -563,11 +519,8 @@ def linebreak(*args):
 
   If the selected notebook does not exist, it is created. By default, today's
   notebook is used."""
-  __created__ = '2012-10-31'
-  __modified__ = '2012-10-31'
-
   op = optparse.OptionParser(usage='%prog linebreak [options]',
-                             version=__modified__,
+                             version=__version__,
                              description=linebreak.__doc__)
   op.add_option('-n', '--notebook', default=None, help='select notebook')
   op.add_option('-#', '--number', default=1, type=int,
@@ -575,8 +528,7 @@ def linebreak(*args):
   op.allow_interspersed_args = False
   opts, posargs = op.parse_args(args=list(args))
   if len(posargs) != 0:
-    print >>sys.stderr, \
-          'lnote linebreak: not expecting any positional parameters'
+    print('lnote linebreak: not expecting any positional parameters', file=sys.stderr)
     sys.exit(1)
   if opts.number < 0:
     op.error('bad number of linebreaks: %i. ' % opts.number+\
@@ -586,7 +538,7 @@ def linebreak(*args):
   notebook = select_notebook(opts.notebook)
 
   # append empty lines
-  for i in xrange(opts.number):
+  for i in range(opts.number):
     append_text(notebook, '\n')
 
 
@@ -595,11 +547,8 @@ def section(*args):
 
   If the selected notebook does not exist, it is created. By default, today's
   notebook is used."""
-  __created__ = '2012-10-31'
-  __modified__ = '2012-11-19'
-
   op = optparse.OptionParser(usage='%prog section [options] TITLE...',
-                             version=__modified__,
+                             version=__version__,
                              description=section.__doc__)
   op.add_option('-n', '--notebook', default=None, help='select notebook')
   op.add_option('-l', '--level', default=1, type=int, help='set level')
@@ -636,11 +585,8 @@ def paragraph(*args):
 
   If the selected notebook does not exist, it is created. By default, today's
   notebook is used."""
-  __created__ = '2012-10-31'
-  __modified__ = '2012-10-31'
-
   op = optparse.OptionParser(usage='%prog paragraph [options] TITLE...',
-                             version=__modified__,
+                             version=__version__,
                              description=paragraph.__doc__)
   op.add_option('-n', '--notebook', default=None, help='select notebook')
   op.add_option('-l', '--level', default=1, type=int, help='set level')
@@ -669,11 +615,8 @@ def equation(*args):
 
   If the selected notebook does not exist, it is created. By default, today's
   notebook is used."""
-  __created__ = '2012-10-31'
-  __modified__ = '2012-10-31'
-
   op = optparse.OptionParser(usage='%prog equation [options] TITLE...',
-                             version=__modified__,
+                             version=__version__,
                              description=equation.__doc__)
   op.add_option('-n', '--notebook', default=None, help='select notebook')
   op.add_option('-#', '--numbered', default=False, action='store_true',
@@ -699,18 +642,9 @@ def figure(*args):
   """Add a figure to a notebook.
 
   If the selected notebook does not exist, it is created. By default, today's
-  notebook is used.
-
-  To do:
-  --> determine size of the graphics file and choose width and height
-      accordingly
-  --> do not overwrite existing graphics files (maybe only by option), instead
-      rename the file"""
-  __created__ = '2012-10-31'
-  __modified__ = '2012-11-20'
-
+  notebook is used."""
   op = optparse.OptionParser(usage='%prog figure [options] TITLE...',
-                             version=__modified__,
+                             version=__version__,
                              description=figure.__doc__)
   op.add_option('-n', '--notebook', default=None, help='select notebook')
   op.add_option('-c', '--caption', default='', help='set caption')
@@ -723,8 +657,7 @@ def figure(*args):
   # check if all graphics files exist
   for graphicsfile in posargs:
     if not os.path.isfile(graphicsfile):
-      print >>sys.stderr, \
-            'lnote figure: cannot copy %s: no such file' % graphicsfile
+      print(f'lnote figure: cannot copy {graphicsfile}: no such file', file=sys.stderr)
       sys.exit(1)
 
   # add the figure
@@ -753,15 +686,9 @@ def prune(*args):
   """Remove the last line of a notebook.
 
   If the selected notebook does not exist, it is created. By default, today's
-  notebook is used.
-
-  To do:
-  --> negative numbers remove lines from the beginning of the notebook"""
-  __created__ = '2012-10-31'
-  __modified__ = '2012-11-01'
-
+  notebook is used."""
   op = optparse.OptionParser(usage='%prog prune [options]',
-                             version=__modified__,
+                             version=__version__,
                              description=prune.__doc__)
   op.add_option('-n', '--notebook', default=None, help='select notebook')
   op.add_option('-#', '--number', default=1, type=int,
@@ -771,11 +698,10 @@ def prune(*args):
   op.allow_interspersed_args = False
   opts, posargs = op.parse_args(args=list(args))
   if len(posargs) != 0:
-    print >>sys.stderr, 'lnote prune: not expecting any positional parameters'
+    print('lnote prune: not expecting any positional parameters', file=sys.stderr)
     sys.exit(1)
   if opts.number < 0:
-    op.error('bad number of lines: %i. ' % opts.number+\
-             'Must be non-negative integer')
+    op.error(f'bad number of lines: {opts.number}. Must be non-negative integer')
   if opts.number == 0:
     return
 
@@ -796,7 +722,7 @@ def prune(*args):
 
     message = 'remove the above line%s from notebook "%s"? ' \
               % (plural(opts.number), notebook)
-    answer = raw_input(message).lower()
+    answer = input(message).lower()
     if not answer or not 'yes'.startswith(answer):
       return
 
@@ -812,11 +738,8 @@ def item(*args):
 
   If the selected notebook does not exist, it is created. By default, today's
   notebook is used."""
-  __created__ = '2012-11-01'
-  __modified__ = '2012-11-01'
-
   op = optparse.OptionParser(usage='%prog item [options] TEXT...',
-                             version=__modified__, description=item.__doc__)
+                             version=__version__, description=item.__doc__)
   op.add_option('-n', '--notebook', default=None, help='select notebook')
   op.add_option('-t', '--type', default='itemize', help='set list type')
   op.add_option('-l', '--label', default=None, type=str, help='set label')
@@ -833,7 +756,7 @@ def item(*args):
   elif 'description'.startswith(opts.type.lower()):
     listtype = DESCRIPTION
   else:
-    print >>sys.stderr, 'lnote item: unknown list type: %s' % opts.type
+    print(f'lnote item: unknown list type: {opts.type}', file=sys.stderr)
     sys.exit(1)
   if listtype is ITEMIZE:
     listtypename = 'itemize'
@@ -846,8 +769,7 @@ def item(*args):
   try:
     notebook = select_notebook(opts.notebook)
   except SelectNotebookError:
-    print >>sys.stderr, \
-          'lnote list: notebook not found: %s' % opts.notebook
+    print(f'lnote list: notebook not found: {opts.notebook}', file=sys.stderr)
     sys.exit(1)
 
   # check last line of the notebook
@@ -855,16 +777,16 @@ def item(*args):
     lines = f.readlines()
   #while not lines[-1].strip():
     #lines = lines[:-1]
-  if '\\end{%s}' % listtypename in lines[-1]:
+  if lines and '\\end{%s}' % listtypename in lines[-1]:
     prune('--notebook', notebook, '--force')
   else:
     append_text(notebook, '\\begin{%s}' % listtypename)
 
   # append item
   if opts.label is None:
-    append_text(notebook, '\item %s' % ' '.join(posargs))
+    append_text(notebook, '\\item %s' % ' '.join(posargs))
   else:
-    append_text(notebook, '\item[%s] %s' % (opts.label, ' '.join(posargs)))
+    append_text(notebook, '\\item[%s] %s' % (opts.label, ' '.join(posargs)))
 
   # end list environment
   append_text(notebook, '\\end{%s}' % listtypename)
@@ -876,11 +798,8 @@ def marginnote(*args):
 
   If the selected notebook does not exist, it is created. By default, today's
   notebook is used."""
-  __created__ = '2012-11-15'
-  __modified__ = '2012-11-15'
-
   op = optparse.OptionParser(usage='%prog marginnote [options] TEXT...',
-                             version=__modified__,
+                             version=__version__,
                              description=marginnote.__doc__)
   op.add_option('-n', '--notebook', default=None, help='select notebook')
   op.allow_interspersed_args = False
@@ -903,40 +822,33 @@ def printcols(strlist, ret=False):
   """Print the strings in the given list in column by column (similar the bash
   command "ls"), respecting the width of the shell window. If ret is True, give
   back the resulting string instead of printing it to stdout."""
-  __created__ = '2012-09-26'
-  __modified__ = '2012-11-19'
-  # based on tb.misc.printcols (written 2011-09-13)
-  # former tb.printcols from 2011-02-13 until 2011-08-02
-  # former mytools.printcols
   if len(strlist) == 0:
     return
   numstr = len(strlist)
   cols = get_cols()
   maxwidth = max([len(s) for s in strlist])
-  numcols = cols/(maxwidth+2)
-  numrows = int(ceil(1.*numstr/numcols))
+  numcols = cols // (maxwidth + 2)
+  numrows = int(ceil(numstr / numcols))
 
   # print the list
   result = ''
-  for rind in xrange(numrows):
-    for cind in xrange(numcols):
-      sind = cind*numrows+rind
+  for rind in range(numrows):
+    for cind in range(numcols):
+      sind = cind * numrows + rind
       if sind < numstr:
-        result += strlist[sind]+' '*(maxwidth-len(strlist[sind])+2)
-    result = result.rstrip()+'\n'
+        result += strlist[sind] + ' ' * (maxwidth - len(strlist[sind]) + 2)
+    result = result.rstrip() + '\n'
 
   # return or print result
   if ret:
     return result.rstrip()
   else:
-    print result.rstrip()
+    print(result.rstrip())
 
 
 def ceil(x):
     """Return the ceiling of x. This exists as a substitute for numpy.ceil, to
     avoid importing the huge numpy module just for this function."""
-    __created__ = '2012-10-29'
-    __modified__ = '2012-10-29'
     if int(x) == x or x <= 0:
         return int(x)
     else:
@@ -944,10 +856,8 @@ def ceil(x):
 
 
 def get_cols():
-    """Try to get the width of the shell window (will only work on Unix
-    systems)."""
     try:
-        return int(commands.getoutput('tput cols'))
+        return int(subprocess.getoutput('tput cols'))
     except ValueError:
         # return default width
         return 80
@@ -956,9 +866,6 @@ def get_cols():
 #def require_file(filename):
   #"""If the file does not exist, create it, and also all directories along the
   #given path."""
-  #__created__ = '2012-10-29'
-  #__modified__ = '2012-10-29'
-  ## copied from pool (written 2012-09-19 until 2012-09-20)
   #filename = os.path.expanduser(filename)
   #if not os.path.isfile(filename):
     #path, fname = os.path.split(filename)
@@ -966,43 +873,33 @@ def get_cols():
       #os.makedirs(path)
     #open(filename, 'w').close()
   #if not os.path.isfile(filename):
-    #raise IOError, 'unable to create file'
+    #raise IOError('unable to create file')
 
 
 #def require_day(day):
   #"""If the tex-file and the directory for the given day do not yet exist,
   #create them."""
-  #__created__ = '2012-10-29'
-  #__modified__ = '2012-10-29'
   #require_file(texpath(day))
 
 
 def texpath(notebook):
   """Return the path to the tex-file of the given notebook."""
-  __created__ = '2012-10-29'
-  __modified__ = '2012-10-31'
-  return os.path.join(LNOTE_DIR, notebook, notebook+'.tex')
+  return os.path.join(LNOTE_DIR, notebook, notebook + '.tex')
 
 
 def dirpath(notebook):
   """Return the path to the directory of the given notebook."""
-  __created__ = '2012-10-29'
-  __modified__ = '2012-10-31'
   return os.path.join(LNOTE_DIR, notebook)
 
 
 #def append_linebreak(notebook):
   #"""Append linebreak to the given notebook."""
-  #__created__ = '2012-10-29'
-  #__modified__ = '2012-10-31'
   #with open(texpath(notebook), 'a') as texfile:
     #texfile.write(' a\n')
 
 
 def append_text(notebook, text):
   """Append text to the given notebook."""
-  __created__ = '2012-10-29'
-  __modified__ = '2012-10-31'
   if text != '\n':
     text = text.strip()
     text += '\n'
@@ -1011,15 +908,12 @@ def append_text(notebook, text):
 
 
 class DayFormatError(BaseException):
-  __created__ = '2012-10-31'
-  __modified__ = '2012-10-31'
+  pass
 
 
 def opt2day(opt):
   """Convert option string to a certain date. Return as Julian day number
   (integer)."""
-  __created__ = '2012-10-29'
-  __modified__ = '2012-10-31'
   opt = opt.strip()
   now = time.localtime()
 
@@ -1047,14 +941,14 @@ def opt2day(opt):
     try:
         then = time.strptime(opt, format)
     except ValueError:
-        raise DayFormatError, 'bad day format: %s' % opt
+        raise DayFormatError(f'bad day format: {opt}')
     return greg2jdn(then.tm_year, then.tm_mon, then.tm_mday)
   elif opt.count('-') == 2:
     format = '%Y-%m-%d' if len(opt.split('-')[0]) == 4 else '%y-%m-%d'
     try:
         then = time.strptime(opt, format)
     except ValueError:
-        raise DayFormatError, 'bad day format: %s' % opt
+        raise DayFormatError(f'bad day format: {opt}')
     return greg2jdn(then.tm_year, then.tm_mon, then.tm_mday)
   elif opt.count('.') == 2:
     if opt[-1] == '.':
@@ -1063,31 +957,25 @@ def opt2day(opt):
     try:
         then = time.strptime(opt, format)
     except ValueError:
-        raise DayFormatError, 'bad day format: %s' % opt
+        raise DayFormatError(f'bad day format: {opt}')
     return greg2jdn(then.tm_year, then.tm_mon, then.tm_mday)
   else:
-    raise DayFormatError, 'bad day format: %s' % opt
+    raise DayFormatError(f'bad day format: {opt}')
 
 
 def opt2days(opt):
   """Convert option string to a list of dates. Return list of integers
   (Julian day numbers)."""
-  __created__ = '2012-10-29'
-  __modified__ = '2012-10-30'
   return [opt2day(x) for x in opt.split(',')]
 
 
 class DayRangeFormatError(DayFormatError):
-  __created__ = '2012-10-31'
-  __modified__ = '2012-10-31'
+  pass
 
 
 def opt2dayrange(opt):
   """Convert option string to a timerange. Return as tuple with two integers
   (JDN1, JDN2+1) (Julian day numbers)."""
-  ### support ranges like "lastweek" or "thisweek" or "nextweek" etc.
-  __created__ = '2012-10-29'
-  __modified__ = '2012-10-31'
   opt = opt.strip()
   months = ['january', 'february', 'march', 'april', 'may', 'june', 'july',
             'august', 'september', 'october', 'november', 'december']
@@ -1095,9 +983,9 @@ def opt2dayrange(opt):
   try:
     if not opt:
       # return "empty" range, not selecting any days
-      return (opt2day('today'),)*2
+      return (opt2day('today'),) * 2
     if opt.count('-') > 1:
-      raise ValueError, 'only one dash (-) allowed in timerange'
+      raise ValueError('only one dash (-) allowed in timerange')
     if opt.count('-') == 1:
       begin, end = opt.split('-')
       for m, mon in enumerate(months):
@@ -1186,53 +1074,45 @@ def opt2dayrange(opt):
           j = opt2day(opt)
           return j, j+1
   except (DayFormatError, ValueError):
-    raise DayRangeFormatError, 'bad dayrange format: %s' % opt
+    raise DayRangeFormatError(f'bad dayrange format: {opt}')
 
 
 def opt2dayranges(opt):
   """Convert option string to a list of timeranges. Return as list of tuples
   with two integers (JDN1, JDN2+1) (Julian day numbers)."""
-  __created__ = '2012-10-29'
-  __modified__ = '2012-10-31'
   return [opt2dayrange(x) for x in opt.split(',')]
 
 
 def greg2jdn(year, mon, mday):
   """Convert Gregorian date to Julian day number.
   Reference: http://en.wikipedia.org/wiki/Julian_Date"""
-  __created__ = '2012-10-30'
-  __modified__ = '2012-10-30'
   year, mon, mday = int(year), int(mon), int(mday)
-  a = (14-mon)/12
-  y = year+4800-a
-  m = mon+12*a-3
-  return mday+(153*m+2)/5+365*y+y/4-y/100+y/400-32045
+  a = (14 - mon) // 12
+  y = year + 4800 - a
+  m = mon + 12 * a - 3
+  return mday + (153 * m + 2) // 5 + 365 * y + y // 4 - y // 100 + y // 400 - 32045
 
 
 def jdn2greg(jdn):
   """Convert Julian day number to Gregorian date.
   Reference: http://en.wikipedia.org/wiki/Julian_Date"""
-  __created__ = '2012-10-31'
-  __modified__ = '2012-10-31'
-  J = int(jdn+.5)
-  j = J+32044
-  g = j/146097;         dg = j%146097
-  c = (dg/36524+1)*3/4; dc = dg-c*36524
-  b = dc/1461;          db = dc%1461
-  a = (db/365+1)*3/4;   da = db-a*365
-  y = g*400+c*100+b*4+a
-  m = (da*5+308)/153-2
-  d = da-(m+4)*153/5+122
-  year = y-4800+(m+2)/12
-  mon = (m+2)%12+1
-  mday = d+1
+  J = int(jdn + .5)
+  j = J + 32044
+  g = j // 146097;                dg = j % 146097
+  c = (dg // 36524 + 1) * 3 // 4; dc = dg - c * 36524
+  b = dc // 1461;                 db = dc % 1461
+  a = (db // 365 + 1) * 3 // 4;   da = db - a * 365
+  y = g * 400 + c * 100 + b * 4 + a
+  m = (da * 5 + 308) // 153 - 2
+  d = da - (m + 4) * 153 // 5 + 122
+  year = y - 4800 + (m + 2) // 12
+  mon = (m + 2) % 12 + 1
+  mday = d + 1
   return year, mon, mday
 
 
 def date2filename(year, mon, mday):
   """Convert Gregorian date to filename."""
-  __created__ = '2012-10-31'
-  __modified__ = '2012-10-31'
   return '%04i-%02i-%02i' % (year, mon, mday)
 
 
@@ -1240,8 +1120,6 @@ def select_notebook(pattern, forgiving=False):
   """Select a single notebook based on the given pattern. If forgiving is
   True, create a new notebook if the given one doesn't exist. Otherwise, only
   create a new notebook if pattern is None or empty."""
-  __created__ = '2012-10-31'
-  __modified__ = '2012-10-31'
   if pattern:
     # try to find a notebook with that name
     if pattern in os.listdir(LNOTE_DIR):
@@ -1258,7 +1136,7 @@ def select_notebook(pattern, forgiving=False):
           notebook = pattern
           create(notebook)
         else:
-          raise SelectNotebookError, pattern
+          raise SelectNotebookError(pattern)
   else:
     # use today
     year, mon, mday = jdn2greg(opt2day('today'))
@@ -1269,24 +1147,18 @@ def select_notebook(pattern, forgiving=False):
 
 
 class SelectNotebookError(BaseException):
-  __created__ = '2012-10-31'
-  __modified__ = '2012-10-31'
-
+  pass
 
 def select_notebooks(*patterns, **kwargs):
   """Select notebooks based on the given string patterns. If unique is True,
   each notebook will be added to the list only once. If skipmissing is True,
   no exception is raised if there is nothing found for a pattern."""
-  __created__ = '2012-10-31'
-  __modified__ = '2013-11-29'
 
   # get keyword arguments
   unique = kwargs.pop('unique', False)
   forgiving = kwargs.pop('forgiving', False)
   if len(kwargs) != 0:
-    raise TypeError, \
-          'select_notebooks() got an unexpected keyword argument \'%s\'' \
-          % kwargs.keys()[0]
+    raise TypeError(f'select_notebooks() got an unexpected keyword argument \'{list(kwargs.keys())[0]}\'')
 
   notebooks = []
   for pattern in patterns:
@@ -1310,14 +1182,16 @@ def select_notebooks(*patterns, **kwargs):
             if forgiving:
                 continue
             else:
-                raise SelectNotebookError, pattern
+                raise SelectNotebookError(pattern)
 
         # select all notebooks according to dayrange
         dirnames = os.listdir(LNOTE_DIR)
         dirnames.sort()
         for dirname in dirnames:
-            try: date = time.strptime(dirname, '%Y-%m-%d')
-            except ValueError: continue
+            try:
+               date = time.strptime(dirname, '%Y-%m-%d')
+            except ValueError:
+               continue
             jdn = greg2jdn(date.tm_year, date.tm_mon, date.tm_mday)
             if jdn >= dayrange[0] and jdn < dayrange[1]:
                 if not unique or dirname not in notebooks:
@@ -1328,8 +1202,6 @@ def select_notebooks(*patterns, **kwargs):
 def plural(number):
   """If abs(number) == 1, return "", otherwise return "s". For conveniently
   appending the plural "s" to words depending on some number."""
-  __created__ = '2012-11-02'
-  __modified__ = '2012-11-02'
   return '' if abs(number) == 1 else 's'
 
 
@@ -1339,8 +1211,6 @@ def get_size(path):
     Reference:
     http://stackoverflow.com/questions/1392413/calculating-a-directory-size-using-python
     """
-    __created__ = '2013-11-08'
-    __modified__ = '2013-11-08'
     if os.path.isdir(path):
         total_size = 0
         for dirpath, dirnames, filenames in os.walk(path):
@@ -1358,8 +1228,6 @@ def get_mtime(path):
     """Return last modification time of a file or all files within a directory
     tree (in seconds since the epoch).
     """
-    __created__ = '2013-11-08'
-    __modified__ = '2013-11-08'
     if os.path.isdir(path):
         mtime = os.path.getmtime(path)
         for dirpath, dirnames, filenames in os.walk(path):
@@ -1430,13 +1298,10 @@ _cmd2func = {
 
 
 def call():
-    # 2012-10-29 - 2012-11-15
-
     # return words for custom tab completion
     if len(sys.argv) == 2 and sys.argv[1] == '--comp-words':
-        keys = _cmd2func.keys()
-        keys.sort()
-        print ' '.join(keys)
+        keys = sorted(_cmd2func.keys())
+        print(' '.join(keys))
         sys.exit(0)
 
     # to enable custom tab completion, add the following lines to your .bashrc
@@ -1478,7 +1343,7 @@ def call():
     if len(sys.argv) == 1 or sys.argv[1] in ('-?', '--help'):
         # display help
         cmds = {}
-        for cmd, func in _cmd2func.iteritems():
+        for cmd, func in _cmd2func.items():
             func = func.__name__
             if func not in cmds:
                 cmds[func] = {'longs': [], 'shorts': []}
@@ -1487,8 +1352,7 @@ def call():
             else:
                 cmds[func]['longs'].append(cmd)
 
-        keys = cmds.keys()
-        keys.sort()
+        keys = sorted(cmds.keys())
         cmdstrings = []
         for key in keys:
             cmd = cmds[key]
@@ -1503,20 +1367,19 @@ def call():
                 cmdstring += ', '.join(short for short in cmd['shorts'])
             cmdstrings.append(cmdstring)
 
-        print __doc__
-        print
-        print 'Available commands (with shortcuts):'
+        print(__doc__)
+        print()
+        print('Available commands (with shortcuts):')
         printcols(cmdstrings)
-        print
-        print 'To get help to a specific command,',
-        print 'use "-?", e.g. "lnote create -?"'
+        print()
+        print('To get help to a specific command, use "-?", e.g. "lnote create -?"')
     else:
         # execute command
         try:
             func = _cmd2func[sys.argv[1]]
         except KeyError:
-            print >>sys.stderr, '%s: command not found. ' % sys.argv[1] + \
-                                'Type "lnote -?" for a list of lnote commands'
+            print(f'{sys.argv[1]}: command not found. ' +
+                  'Type "lnote -?" for a list of lnote commands', file=sys.stderr)
             sys.exit(1)
         func(*sys.argv[2:])
     sys.exit(0)

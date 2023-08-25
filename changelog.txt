@@ -1,0 +1,7 @@
+# Change Log
+
+## v0.1.0
+
+- port to Python 3
+- add __version__ attribute
+- introduce change log and todo files

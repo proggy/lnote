@@ -1,19 +1,19 @@
 lnote
 =====
 
-Write notes in LaTeX format, directly from the command line. Organize the
-notes in notebooks. Automatically create a notebook for the current day if no
-other notebook is selected. View and edit the notes of each day or notebook.
-Select one or more notebooks or a certain timerange and export them to a PDF
-file, or merge them into a new notebook.
+Compose notes in LaTeX format on the command line. Organize the notes in
+notebooks. Automatically create a notebook for the current day if no specific
+notebook is selected. View and edit the notes of each day or notebook. Select
+one or more notebooks or a certain timerange and export them to a PDF file, or
+merge them into a new notebook.
 
 
 
 Copyright notice
 ----------------
 
-Copyright (C) 2013-2014 Daniel Jung.
-Contact: djungbremen@gmail.com
+Copyright (C) 2013-2023 Daniel Jung.
+Contact: proggy-contact@mailbox.org
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
